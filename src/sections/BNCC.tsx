@@ -21,18 +21,32 @@ const grades = [
   { name: "Pride", filter: "hue-rotate(-12deg) saturate(1.2)" },
 ];
 
-/* Official cadet photo: loads straight from nirob120.netlify.app; if it is not
-   published yet an art-directed record panel is shown instead of a stock image. */
-function CadetPhoto({ className = "", alt = "Nirob, BNCC cadet" }: { className?: string; alt?: string }) {
+/* Official cadet photo: served from this site's own /nirob/bncc.jpg (the new
+   inspection-day handshake photo); falls back to the live portfolio copy, and
+   only if neither loads is an art-directed record panel shown instead. */
+const LOCAL_BNCC = "/nirob/bncc.jpg";
+const REMOTE_BNCC = `${SITE_URL}/bncc.jpg`;
+
+function useCadetSrc() {
+  const [src, setSrc] = useState(LOCAL_BNCC);
   const [failed, setFailed] = useState(false);
+  const onError = () => {
+    if (src === LOCAL_BNCC) setSrc(REMOTE_BNCC);
+    else setFailed(true);
+  };
+  return { src, failed, onError };
+}
+
+function CadetPhoto({ className = "", alt = "Nirob, BNCC cadet" }: { className?: string; alt?: string }) {
+  const { src, failed, onError } = useCadetSrc();
   return (
     <div className={`relative overflow-hidden ${className}`}>
       {!failed && (
         <img
-          src={`${SITE_URL}/bncc.jpg`}
+          src={src}
           alt={alt}
           className="absolute inset-0 h-full w-full object-cover object-[42%_45%]"
-          onError={() => setFailed(true)}
+          onError={onError}
         />
       )}
       <div className={`absolute inset-0 ${failed ? "" : "opacity-0"}`} aria-hidden={!failed}>
@@ -400,7 +414,7 @@ export function BNCC() {
               className="relative max-h-[86svh] w-full max-w-5xl overflow-hidden rounded-2xl border border-white/15 shadow-[0_40px_120px_rgba(0,0,0,.8)]"
               style={{ transformPerspective: 1200 }}
             >
-              <SiteImage file="bncc.jpg" alt="Nirob BNCC cadet inspection, full frame" className="max-h-[76svh] w-full object-cover" style={{ filter: grades[grade].filter }} local="/nirob/yes.jpg" />
+              <CadetFullFrame filter={grades[grade].filter} />
               <div className="absolute inset-x-0 bottom-0 flex flex-wrap items-center justify-between gap-3 bg-gradient-to-t from-ink to-transparent p-5">
                 <div>
                   <p className="font-mono text-[9px] uppercase tracking-[0.25em] text-[#e6e4dd]">BNCC · Inspection day</p>
