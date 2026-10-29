@@ -25,7 +25,7 @@ const grades = [
    inspection-day handshake photo); falls back to the live portfolio copy, and
    only if neither loads is an art-directed record panel shown instead. */
 const LOCAL_BNCC = "/nirob/bncc.jpg";
-const REMOTE_BNCC = `${SITE_URL}/bncc.jpg`;
+const REMOTE_BNCC = `${NETLIFY_URL}/bncc.jpg`;
 
 function useCadetSrc() {
   const [src, setSrc] = useState(LOCAL_BNCC);

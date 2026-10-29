@@ -10,7 +10,6 @@ import {
   WebGLRenderer,
 } from "three";
 
-const SITE = "https://nirob120.netlify.app";
 
 const vertex = /* glsl */ `
   attribute vec3 aTarget;
@@ -105,14 +104,6 @@ function sample(img: HTMLImageElement, cols: number, aspect: number): Grid {
   const sy = (ih - sh) * 0.24;
   ctx.drawImage(img, sx, sy, sw, sh, 0, 0, cols, rows);
   const data = ctx.getImageData(0, 0, cols, rows).data;
-  // strict monochrome: luminance only, contrast lifted a touch for sparkle
-  for (let i = 0; i < data.length; i += 4) {
-    const l = 0.2126 * data[i] + 0.7152 * data[i + 1] + 0.0722 * data[i + 2];
-    const v = Math.max(0, Math.min(255, (l - 128) * 1.18 + 128));
-    data[i] = v;
-    data[i + 1] = v;
-    data[i + 2] = v;
-  }
   return { cols, rows, data, aspect };
 }
 
@@ -247,7 +238,7 @@ export default function PixelPortrait({
       const size: number[] = [];
       const cellW = rw / cols;
       const cellH = rh / rows;
-      const point = Math.max(1.6, Math.min(cellW, cellH) * 1.02);
+      const point = Math.max(1.3, Math.min(cellW, cellH) * 0.82);
       const ring = Math.max(cw, ch) * 0.72;
 
       for (let r = 0; r < rows; r++) {
@@ -273,7 +264,7 @@ export default function PixelPortrait({
           start.push(Math.cos(angle) * radius, Math.sin(angle) * radius * 0.9, 0);
           color.push((cr_ / 255) ** 1.05, (cg / 255) ** 1.05, (cb / 255) ** 1.05);
           rand.push(rnd);
-          alpha.push(0.55 + (rnd * 0.45));
+          alpha.push(0.45 + (rnd * 0.45));
           size.push(point * (0.85 + rnd * 0.3));
         }
       }
@@ -296,7 +287,7 @@ export default function PixelPortrait({
       if (!img) return;
       const ar = anchor.getBoundingClientRect();
       const aspect = Math.max(0.2, ar.width / Math.max(1, ar.height));
-      const cols = window.innerWidth < 768 ? 62 : 100;
+      const cols = window.innerWidth < 768 ? 58 : 104;
       try {
         grid = sample(img, cols, aspect);
         build();
@@ -307,7 +298,7 @@ export default function PixelPortrait({
     };
 
     const load = async () => {
-      for (const src of ["/nirob/yes.jpg", `${SITE}/yes.jpg`]) {
+      for (const src of ["https://nirob120.netlify.app/yes.jpg", "/nirob/yes.jpg", "nirob/yes.jpg", "public/nirob/yes.jpg"]) {
         try {
           const loaded = await decode(src);
           if (disposed) return;
@@ -403,5 +394,5 @@ export default function PixelPortrait({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return <canvas ref={canvasRef} aria-hidden className="pointer-events-none absolute left-1/2 top-1/2 z-20 h-[200%] w-[200%] -translate-x-1/2 -translate-y-1/2" />;
+  return <canvas ref={canvasRef} aria-hidden className="pointer-events-none absolute inset-0 z-20 h-full w-full" />;
 }

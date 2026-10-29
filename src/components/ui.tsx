@@ -441,29 +441,31 @@ export const WhatsappIcon = ({ className = "h-5 w-5" }: { className?: string }) 
   </svg>
 );
 
-/* ---------- Image that prefers the live portfolio site, with local fallback ---------- */
-export const SITE_URL = "https://nirob120.netlify.app";
+/* ---------- Image helper: takes all pics without bncc from nirob120.netlify.app ---------- */
+export const NETLIFY_URL = "https://nirob120.netlify.app";
+
+export const getImageUrl = (file: string) => {
+  // All images except bncc come directly from nirob120.netlify.app
+  if (file.toLowerCase().includes("bncc")) {
+    return `/nirob/${file}`;
+  }
+  return `${NETLIFY_URL}/${file}`;
+};
+
+export const asset = (file: string) => getImageUrl(file);
 
 export function SiteImage({
   file,
   alt,
   className = "",
-  local,
   ...rest
-}: { file: string; alt: string; className?: string; local?: string } & Omit<React.ImgHTMLAttributes<HTMLImageElement>, "src" | "alt" | "className">) {
-  const fallback = local ?? `/nirob/${file}`;
-  const [src, setSrc] = useState(`${SITE_URL}/${file}`);
-  const [dead, setDead] = useState(false);
-  if (dead) {
-    return (
-      <div className={`grid place-items-center bg-[radial-gradient(circle_at_50%_35%,#25262f,#0b0b0a_70%)] ${className}`} role="img" aria-label={alt}>
-        <div className="text-center">
-          <span className="mx-auto block h-10 w-10 rounded-full border border-white/20 bg-white/5 p-2 font-display text-[10px] font-bold leading-none text-accent">NB</span>
-          <span className="mt-2 block font-mono text-[8px] uppercase tracking-[0.2em] text-mute">Photo loading soon</span>
-        </div>
-      </div>
-    );
-  }
+}: { file: string; alt: string; className?: string } & Omit<React.ImgHTMLAttributes<HTMLImageElement>, "src" | "alt" | "className">) {
+  const isBncc = file.toLowerCase().includes("bncc");
+  // Primary URL is directly nirob120.netlify.app for all photos, except bncc which is local
+  const primary = isBncc ? `/nirob/${file}` : `${NETLIFY_URL}/${file}`;
+  const [src, setSrc] = useState(primary);
+  const [attempt, setAttempt] = useState(0);
+
   return (
     <img
       {...rest}
@@ -471,9 +473,58 @@ export function SiteImage({
       alt={alt}
       className={className}
       onError={() => {
-        if (src !== fallback) setSrc(fallback);
-        else setDead(true);
+        if (attempt === 0) {
+          // If primary fails, fallback to local /nirob/${file}
+          setSrc(isBncc ? `/bncc.jpg` : `/nirob/${file}`);
+          setAttempt(1);
+        } else if (attempt === 1) {
+          // Second fallback: root /${file}
+          setSrc(isBncc ? `nirob/bncc.jpg` : `/${file}`);
+          setAttempt(2);
+        } else if (attempt === 2 && !isBncc) {
+          // Third fallback: relative nirob/${file}
+          setSrc(`nirob/${file}`);
+          setAttempt(3);
+        }
       }}
     />
+  );
+}
+
+/* ---------- Chapter divider: number wipes in, rule draws across ---------- */
+export function ChapterMark({
+  index,
+  title,
+  meta,
+  tone = "dark",
+  className = "",
+}: {
+  index: string;
+  title: string;
+  meta?: string;
+  tone?: "dark" | "light";
+  className?: string;
+}) {
+  const light = tone === "light";
+  return (
+    <div className={`relative z-10 mx-auto w-full max-w-[1600px] px-5 md:px-10 ${className}`}>
+      <div className="flex items-end justify-between gap-6 border-t pt-4" style={{ borderColor: light ? "rgba(10,10,10,.18)" : "rgba(244,242,236,.14)" }}>
+        <div className="flex items-end gap-4 md:gap-6">
+          <span className={`font-display text-5xl font-extrabold leading-none tracking-tight md:text-7xl ${light ? "text-ink/15" : "text-bone/15"}`}>{index}</span>
+          <div className="overflow-hidden">
+            <motion.p
+              initial={{ y: "110%" }}
+              whileInView={{ y: 0 }}
+              viewport={{ once: true, margin: "-10% 0px" }}
+              transition={{ duration: 0.9, ease }}
+              className={`font-mono text-[10px] uppercase tracking-[0.28em] md:text-[11px] ${light ? "text-ink/60" : "text-mute"}`}
+            >
+              {title}
+            </motion.p>
+          </div>
+        </div>
+        {meta && <span className={`hidden font-mono text-[10px] uppercase tracking-[0.22em] sm:block ${light ? "text-ink/40" : "text-mute/70"}`}>{meta}</span>}
+      </div>
+    </div>
   );
 }

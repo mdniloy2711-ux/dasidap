@@ -102,7 +102,7 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
       },
       {
         id: "instagram",
-        label: "Instagram — @_nirob_hex",
+        label: "Instagram — @nir0b__",
         hint: "Photography",
         group: "Project" as const,
         icon: <InstagramIcon className="h-3.5 w-3.5" />,

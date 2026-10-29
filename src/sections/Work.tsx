@@ -51,7 +51,7 @@ function ProjectCard({ p, i, trackX, desktop, onOpen }: { p: (typeof projects)[n
         <div className="relative aspect-[9/14] h-full max-h-[340px] rounded-[1.8rem] border-[5px] border-[#262624] bg-black shadow-[0_30px_80px_-20px_rgba(0,0,0,.9)] transition-transform duration-700 ease-[cubic-bezier(.22,1,.36,1)] group-hover:-translate-y-3 group-hover:-rotate-3 group-hover:scale-105">
           <span className="absolute left-1/2 top-1.5 z-10 h-1.5 w-12 -translate-x-1/2 rounded-full bg-[#262624]" />
           <img
-            src={p.img}
+            src={getImageUrl(p.img)}
             alt={`${p.title} screenshot`}
             loading="lazy"
             className="img-mono h-full w-full rounded-[1.4rem] object-cover object-top transition-[object-position] duration-[2.2s] ease-in-out group-hover:object-bottom"

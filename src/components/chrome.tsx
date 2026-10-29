@@ -57,7 +57,7 @@ export function Preloader({ onDone }: { onDone: () => void }) {
           >
             <span className="absolute -inset-4 animate-spin-slow rounded-full border border-dashed border-white/20" />
             <span className="absolute -inset-8 rounded-full border border-white/5" />
-            <img src="https://nirob120.netlify.app/hii.png" alt="" className="h-24 w-24 rounded-full object-cover ring-1 ring-white/25 md:h-28 md:w-28" />
+            <SiteImage file="hii.png" alt="Nirob logo" className="h-24 w-24 rounded-full object-cover ring-1 ring-white/25 md:h-28 md:w-28" />
           </motion.div>
 
           <div className="text-center">
@@ -111,6 +111,23 @@ export function ProgressBar() {
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, { stiffness: 120, damping: 30, restDelta: 0.001 });
   return <motion.div className="fixed inset-x-0 top-0 z-[120] h-[2px] origin-left bg-accent" style={{ scaleX }} />;
+}
+
+/* ================= SCROLL SPINE ================= */
+export function ScrollSpine() {
+  const { scrollYProgress } = useScroll();
+  const smooth = useSpring(scrollYProgress, { stiffness: 90, damping: 26, restDelta: 0.001 });
+  const [pct, setPct] = useState(0);
+  useMotionValueEvent(smooth, "change", (v) => setPct(Math.round(v * 100)));
+  return (
+    <div className="fixed bottom-6 left-1/2 z-[95] hidden -translate-x-1/2 items-center gap-3 font-mono text-[9px] uppercase tracking-[0.22em] text-mute lg:flex" aria-hidden>
+      <span className="tabular-nums text-bone/70">{String(pct).padStart(2, "0")}</span>
+      <div className="relative h-px w-40 bg-white/12">
+        <motion.div className="absolute inset-y-0 left-0 w-full origin-left bg-bone/80" style={{ scaleX: smooth }} />
+      </div>
+      <span className="tabular-nums">100</span>
+    </div>
+  );
 }
 
 /* ================= HEADER ================= */

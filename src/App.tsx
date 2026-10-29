@@ -7,7 +7,7 @@ import Scene3D from "./components/Scene3D";
 import { Skills3D } from "./sections/Skills3D";
 import { BNCC } from "./sections/BNCC";
 import { Beyond } from "./sections/Beyond";
-import { BackToTop, ChapterRail, Header, HexToast, Menu, Preloader, ProgressBar } from "./components/chrome";
+import { BackToTop, ChapterRail, Header, HexToast, Menu, Preloader, ProgressBar, ScrollSpine } from "./components/chrome";
 import { CommandPalette } from "./components/CommandPalette";
 import { Hero } from "./sections/Hero";
 import { About, PersonalInfo } from "./sections/About";
@@ -89,6 +89,7 @@ export default function App() {
       <Footer />
 
       <ChapterRail active={active} />
+      <ScrollSpine />
       <BackToTop />
       <HexToast ready={ready} />
     </>

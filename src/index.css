@@ -11,8 +11,8 @@
   --color-panel-2: #14151c;
   --color-bone: #ecebe6;
   --color-mute: #8b8b94;
-  --color-fire: #e9e7e0;
-  --color-gold: #c9c7c0;
+  --color-fire: #ff5b2e;
+  --color-gold: #f4b93e;
 
   --animate-marquee: marquee 28s linear infinite;
   --animate-marquee-rev: marquee-rev 28s linear infinite;
@@ -33,7 +33,7 @@
 }
 
 :root {
-  --accent: #f4f2ec;
+  --accent: #ff5b2e;
   color-scheme: dark;
   --line: rgba(244, 242, 236, 0.14);
   --line-soft: rgba(244, 242, 236, 0.07);
@@ -157,7 +157,7 @@ img { -webkit-user-drag: none; }
   background-image: radial-gradient(rgba(244,242,236,.16) 1px, transparent 1px);
   background-size: 26px 26px;
 }
-.img-mono { filter: grayscale(1) contrast(1.06) brightness(.94); transition: filter .7s cubic-bezier(.22,1,.36,1), transform .9s cubic-bezier(.22,1,.36,1); }
+.img-mono { filter: none; transition: filter .7s cubic-bezier(.22,1,.36,1), transform .9s cubic-bezier(.22,1,.36,1); }
 .group:hover .img-mono, .img-mono:hover { filter: grayscale(0) contrast(1.02) brightness(1); }
 .ghost-text { color: transparent; -webkit-text-stroke: 1px rgba(244,242,236,.28); }
 .ghost-text-strong { color: transparent; -webkit-text-stroke: 1.5px rgba(244,242,236,.55); }

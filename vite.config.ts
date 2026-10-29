@@ -8,16 +8,18 @@ import { viteSingleFile } from "vite-plugin-singlefile";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// https://vite.dev/config/
-export default defineConfig({
+// GitHub Pages project sites are served from /<repo-name>/.
+// If you rename the repository, change this one value (keep both slashes).
+// For a user site (username.github.io) use "/" instead.
+const BASE = "./";
+
+export default defineConfig(({ command }) => ({
+  base: BASE,
   plugins: [react(), tailwindcss(), viteSingleFile()],
-  server: {
-    host: "0.0.0.0",
-    allowedHosts: [".e2b.app"],
-  },
   resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "src"),
-    },
+    alias: { "@": path.resolve(__dirname, "src") },
   },
-});
+  build: { outDir: "dist" },
+  server: { host: true, allowedHosts: [".e2b.app"] },
+  command,
+}));
